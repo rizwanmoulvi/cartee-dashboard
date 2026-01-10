@@ -9,14 +9,10 @@ import { createConfig, WagmiProvider, http } from 'wagmi';
 import {
   metaMaskWallet,
   walletConnectWallet,
-  kaiaWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import {
   mainnet,
-
-  kaia,
-
-  kairos
+  sepolia
 } from 'wagmi/chains';
 import {
   QueryClientProvider,
@@ -29,23 +25,21 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: 'Recommended',
-      wallets: [kaiaWallet, metaMaskWallet, walletConnectWallet],
+      wallets: [metaMaskWallet, walletConnectWallet],
     },
   ],
   { 
-    appName: 'WonWay', 
+    appName: 'Cartee', 
     projectId 
   },
 );
 
 const config = createConfig({
   connectors,
-  chains: [mainnet, kaia, kairos],
+  chains: [mainnet, sepolia],
   transports: {
     [mainnet.id]: http(),
-    [kaia.id]: http(),
-    [kairos.id]: http(),
-
+    [sepolia.id]: http(),
   },
   ssr: true,
 });
