@@ -108,14 +108,13 @@ function InvalidInvoiceError() {
 export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   const resolvedSearchParams = await searchParams;
   const paymentData = await fetchPaymentData(resolvedSearchParams);
-  const initialLang = resolvedSearchParams.lang === 'ko' ? 'ko' : 'en';
 
   // Show error page if invoice not found
   if (!paymentData) {
     return <InvalidInvoiceError />;
   }
 
-  return <PaymentClient paymentData={paymentData} initialLang={initialLang} />;
+  return <PaymentClient paymentData={paymentData} />;
 }
 
 export async function generateMetadata({ searchParams }: PaymentPageProps) {
@@ -124,7 +123,7 @@ export async function generateMetadata({ searchParams }: PaymentPageProps) {
   
   if (!paymentData) {
     return {
-      title: 'Invoice Not Found - WonWay',
+      title: 'Invoice Not Found - Cartee',
       description: 'The requested invoice could not be found or is invalid.',
     };
   }
