@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  turbopack: {},
   experimental: {
     // Disable static optimization for API routes
     serverActions: {
