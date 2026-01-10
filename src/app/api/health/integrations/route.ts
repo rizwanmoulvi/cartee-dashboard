@@ -4,6 +4,9 @@ import { prisma } from '@/lib/prisma';
 // Health check for platform integrations
 export async function GET(request: NextRequest) {
   try {
+    // Skip database operations during build time
+    const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
+    
     const healthStatus = {
       shopify: {
         connected: false,
@@ -20,7 +23,7 @@ export async function GET(request: NextRequest) {
     // Get wallet address from query params to find the merchant
     const walletAddress = request.nextUrl.searchParams.get('wallet');
     
-    if (walletAddress) {
+    if (walletAddress && !isBuildTime) {
       const merchant = await prisma.merchant.findUnique({
         where: { walletAddress: walletAddress.toLowerCase() }
       });
