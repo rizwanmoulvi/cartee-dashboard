@@ -415,7 +415,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Wallet className="w-5 h-5 text-black" />
-            <span className="font-semibold text-black">WonWay</span>
+            <span className="font-semibold text-black">Cartee</span>
           </div>
           <ConnectButton />
         </div>
