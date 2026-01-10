@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { parseUnits, erc20Abi } from 'viem';
 
 // Token addresses
-const KRW_TOKEN_ADDRESS = '0xb813E193ddE7ba598089C398F677EDfEBb77a5Aa' as `0x${string}`;
+const MNEE_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_MNEE_TOKEN_ADDRESS as `0x${string}`;
 
 interface Invoice {
   id: string;
@@ -81,17 +81,17 @@ export default function MerchantDashboard() {
       hash: refundTxHash
     });
 
-  // Get merchant's KRW balance for refunds
-  const { data: krwBalance } = useBalance({
+  // Get merchant's MNEE balance for refunds
+  const { data: mneeBalance } = useBalance({
     address: address,
-    token: KRW_TOKEN_ADDRESS,
+    token: MNEE_TOKEN_ADDRESS,
   });
   
   // Form state for new invoice
   const [formData, setFormData] = useState({
     productName: '',
     totalAmount: '',
-    currency: 'KRW',
+    currency: 'MNEE',
     customerEmail: '',
     description: '',
     expiresInHours: '24',
@@ -276,7 +276,7 @@ export default function MerchantDashboard() {
     setFormData({
       productName: '',
       totalAmount: '',
-      currency: 'KRW',
+      currency: 'MNEE',
       customerEmail: '',
       description: '',
       expiresInHours: '24',
@@ -389,7 +389,7 @@ export default function MerchantDashboard() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link href="/" className="text-xl font-bold text-gray-900">
-                WonWay
+                Cartee
               </Link>
               <span className="text-gray-500">/</span>
               <span className="text-gray-700">Merchant Dashboard</span>
@@ -533,10 +533,10 @@ export default function MerchantDashboard() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 3v12a2 2 0 002 2h8a2 2 0 002-2V7M9 7h6" />
                       </svg>
-                      <span>KRW Faucet</span>
+                      <span>MNEE Faucet</span>
                     </a>
                     <a
-                      href="https://github.com/wongateway/wongateway"
+                      href="https://github.com/rizwanmoulvi/cartee-dashboard"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -544,10 +544,10 @@ export default function MerchantDashboard() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
-                      <span>WonWay Repository</span>
+                      <span>Cartee Repository</span>
                     </a>
                     <a
-                      href="https://github.com/wongateway/krw-woocommerce-gateway-plugin"
+                      href="https://github.com/rizwanmoulvi/mnee-woocommerce-gateway"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -555,10 +555,10 @@ export default function MerchantDashboard() {
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
-                      <span>WonWay WooCommerce Plugin Repository</span>
+                      <span>Cartee WooCommerce Plugin Repository</span>
                     </a>
                     <a
-                      href="https://woocommerce.wonway.xyz"
+                      href="https://cartee.rizzmo.site"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -568,7 +568,7 @@ export default function MerchantDashboard() {
                       <ExternalLink className="w-3 h-3 ml-auto" />
                     </a>
                     <a
-                      href="https://kaia-commerce.myshopify.com"
+                      href="https://mnee-demo.myshopify.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -721,7 +721,7 @@ export default function MerchantDashboard() {
                               <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
                                 <p className="font-semibold text-yellow-800 mb-1">⚠️ Important: Self-Hosted Integration Only</p>
                                 <p className="text-yellow-700">
-                                  This Shopify integration requires self-hosting. You cannot connect your store directly through WonWay.
+                                  This Shopify integration requires self-hosting. You cannot connect your store directly through Cartee.
                                 </p>
                                 <p className="text-yellow-700 mt-1">
                                   To integrate your own Shopify store:
@@ -733,7 +733,7 @@ export default function MerchantDashboard() {
                                   <li>Use the webhook URL above with your API key parameter</li>
                                 </ol>
                                 <a 
-                                  href="https://github.com/nickmura/wonway" 
+                                  href="https://github.com/rizwanmoulvi/cartee-dashboard" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="inline-block mt-2 text-yellow-800 hover:text-yellow-900 underline font-medium"
@@ -920,7 +920,7 @@ export default function MerchantDashboard() {
                             </p>
                             <div className="mt-2 space-y-1">
                               <a 
-                                href="https://github.com/nickmura/wonway-woocommerce-plugin" 
+                                href="https://github.com/rizwanmoulvi/mnee-woocommerce-gateway" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="block text-blue-600 hover:text-blue-700 underline"
@@ -928,7 +928,7 @@ export default function MerchantDashboard() {
                                 📥 Download WooCommerce Plugin →
                               </a>
                               <a 
-                                href="https://woocommerce.wonway.xyz" 
+                                href="https://cartee.rizzmo.site" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="block text-purple-600 hover:text-purple-700 underline"
@@ -1171,7 +1171,7 @@ export default function MerchantDashboard() {
                           onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                           className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <option value="KRW">KRW</option>
+                          <option value="MNEE">MNEE</option>
                           <option value="USD">USD</option>
                         </select>
                       </div>

@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const {
       productName,
       totalAmount,
-      currency = 'KRW',
+      currency = 'MNEE',
       customerEmail,
       description,
       _merchantWallet,
