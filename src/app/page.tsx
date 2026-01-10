@@ -1,138 +1,214 @@
 'use client';
 
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowRight, ShoppingCart, Zap, Shield, Code, Globe, DollarSign, CheckCircle, Languages, Store } from "lucide-react";
+import { ArrowRight, Zap, Shield, Code, Globe, DollarSign, CheckCircle, Store } from "lucide-react";
 
 export default function Home() {
-  const [language, setLanguage] = useState<'en' | 'ko'>('en');
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Header */}
+      <header className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg sm:text-xl">C</span>
+            </div>
+            <span className="text-lg sm:text-xl font-bold text-gray-900">Cartee</span>
+            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold">BETA</span>
+          </div>
+          <div className="flex items-center space-x-3 sm:space-x-6">
+            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors text-sm sm:text-base">
+              Dashboard
+            </Link>
+            <Link href="/faucet" className="hidden sm:inline text-gray-600 hover:text-gray-900 transition-colors">
+              Faucet
+            </Link>
+            <a href="https://github.com/rizwanmoulvi/cartee-dashboard" target="_blank" rel="noopener noreferrer" className="hidden sm:inline text-gray-600 hover:text-gray-900 transition-colors">
+              GitHub
+            </a>
+          </div>
+        </nav>
+      </header>
 
-  const content = {
-    en: {
-      nav: { demo: 'Demo', dashboard: 'Dashboard', faucet: 'Faucet', github: 'GitHub' },
-      hero: {
-        badge: 'Proof of Concept',
-        title1: 'Accept KRW Stablecoin',
-        title2: 'in Your Shopify Store',
-        description: 'A research project exploring seamless cryptocurrency payments for e-commerce using Kaia blockchain\'s KRW stablecoin.',
-        tryDemo: 'Try Demo',
-        viewSource: 'View Source Code',
-        visitStore: 'Visit Shopify Store'
-      },
-      features: {
-        title: 'Research Focus Areas',
-        subtitle: 'Exploring the future of e-commerce payments on blockchain',
-        kaia: {
-          title: 'Kaia Network',
-          description: 'Built on Kaia blockchain (formerly Klaytn), leveraging its fast finality and low gas fees for optimal payment processing.'
-        },
-        krw: {
-          title: 'KRW Stablecoin',
-          description: 'Utilizing Korean Won pegged stablecoin for stable pricing and familiar currency denomination in Korean markets.'
-        },
-        smart: {
-          title: 'Smart Contracts',
-          description: 'ERC-20 token standard implementation with approve/transfer pattern for secure and transparent transactions.'
-        }
-      },
-      tech: {
-        title: 'Technical Implementation',
-        subtitle: 'Open-source proof of concept for Web3 commerce',
-        shopify: {
-          title: 'Shopify Webhook Integration',
-          description: 'Automated order processing and status synchronization'
-        },
-        rainbow: {
-          title: 'RainbowKit Wallet Connection',
-          description: 'Support for MetaMask, Kaia Wallet, and WalletConnect'
-        },
-        tracking: {
-          title: 'Real-time Transaction Tracking',
-          description: 'On-chain verification with Kaiascan explorer integration'
-        },
-        database: {
-          title: 'PostgreSQL Order Management',
-          description: 'Prisma ORM for reliable order and payment tracking'
-        },
-        stack: 'Tech Stack:'
-      },
-      cta: {
-        title: 'Ready to Explore Web3 Commerce?',
-        description1: 'This is an experimental project for research and educational purposes.',
-        description2: 'Test with Kairos testnet tokens only.',
-        launch: 'Launch Payment Gateway',
-        viewExplorer: 'View on Kaiascan'
-      },
-      footer: {
-        tagline: 'WonWay - A proof of concept for blockchain payments in e-commerce',
-        built: 'Built with ❤️ for the Kaia ecosystem',
-        opensource: 'Open Source'
-      }
-    },
-    ko: {
-      nav: { demo: '데모', dashboard: '대시보드', faucet: '수도꼭지', github: '깃허브' },
-      hero: {
-        badge: '개념 증명',
-        title1: 'KRW 스테이블코인',
-        title2: 'Shopify 결제 지원',
-        description: 'Kaia 블록체인의 KRW 스테이블코인을 활용한 전자상거래 암호화폐 결제 연구 프로젝트',
-        tryDemo: '데모 체험',
-        viewSource: '소스 코드 보기',
-        visitStore: 'Shopify 스토어 방문'
-      },
-      features: {
-        title: '연구 중점 분야',
-        subtitle: '블록체인 기반 전자상거래 결제의 미래 탐구',
-        kaia: {
-          title: 'Kaia 네트워크',
-          description: 'Kaia 블록체인(구 Klaytn)을 기반으로 빠른 완결성과 낮은 가스비를 활용한 최적의 결제 처리'
-        },
-        krw: {
-          title: 'KRW 스테이블코인',
-          description: '한국 시장에 친숙한 원화 페깅 스테이블코인을 활용한 안정적인 가격 책정'
-        },
-        smart: {
-          title: '스마트 컨트랙트',
-          description: '안전하고 투명한 거래를 위한 ERC-20 토큰 표준 구현 및 승인/전송 패턴'
-        }
-      },
-      tech: {
-        title: '기술 구현',
-        subtitle: 'Web3 커머스를 위한 오픈소스 개념 증명',
-        shopify: {
-          title: 'Shopify 웹훅 통합',
-          description: '자동화된 주문 처리 및 상태 동기화'
-        },
-        rainbow: {
-          title: 'RainbowKit 지갑 연결',
-          description: 'MetaMask, Kaia Wallet, WalletConnect 지원'
-        },
-        tracking: {
-          title: '실시간 거래 추적',
-          description: 'Kaiascan 탐색기 통합을 통한 온체인 검증'
-        },
-        database: {
-          title: 'PostgreSQL 주문 관리',
-          description: '안정적인 주문 및 결제 추적을 위한 Prisma ORM'
-        },
-        stack: '기술 스택:'
-      },
-      cta: {
-        title: 'Web3 커머스를 탐험할 준비가 되셨나요?',
-        description1: '이것은 연구 및 교육 목적의 실험 프로젝트입니다.',
-        description2: 'Kairos 테스트넷 토큰으로만 테스트하세요.',
-        launch: '결제 게이트웨이 실행',
-        viewExplorer: 'Kaiascan에서 보기'
-      },
-      footer: {
-        tagline: 'WonWay - 전자상거래 블록체인 결제 개념 증명',
-        built: 'Kaia 생태계를 위해 ❤️로 제작',
-        opensource: '오픈 소스'
-      }
-    }
-  };
+      {/* Hero Section */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold mb-6">
+            <Zap className="w-4 h-4" />
+            <span>Powered by Ethereum</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Accept MNEE Stablecoin
+            <br />
+            <span className="text-blue-600">in Your E-Commerce Store</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Seamless cryptocurrency payments for WooCommerce and Shopify using MNEE stablecoin on Ethereum Sepolia testnet.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <Link 
+              href="/dashboard"
+              className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a 
+              href="https://github.com/rizwanmoulvi/cartee-dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              <Code className="w-5 h-5" />
+              <span>View Source Code</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
-  const t = content[language];
+      {/* Features Grid */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Key Features</h2>
+            <p className="text-gray-600">Built for modern e-commerce with blockchain technology</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <Globe className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Ethereum Network</h3>
+              <p className="text-gray-600">
+                Built on Ethereum blockchain with Sepolia testnet support for secure and reliable payment processing.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <DollarSign className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">MNEE Stablecoin</h3>
+              <p className="text-gray-600">
+                ERC-20 stablecoin for predictable pricing and seamless integration with existing wallets.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Smart Contracts</h3>
+              <p className="text-gray-600">
+                ERC-20 token standard implementation with approve/transfer pattern for secure and transparent transactions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technical Implementation */}
+      <section className="container mx-auto px-6 py-20 bg-gray-50 rounded-3xl my-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Technical Implementation</h2>
+            <p className="text-gray-600">Open-source solution for Web3 commerce</p>
+          </div>
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div className="space-y-6">
+              <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-500 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-gray-900">WooCommerce & Shopify Integration</h4>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Automated order processing and status synchronization via webhooks
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-500 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-gray-900">RainbowKit Wallet Connection</h4>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Support for MetaMask, Coinbase Wallet, and WalletConnect
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-500 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-gray-900">Real-time Transaction Tracking</h4>
+                  <p className="text-gray-600 text-sm mt-1">
+                    On-chain verification with Etherscan integration
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-500 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-gray-900">PostgreSQL Order Management</h4>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Prisma ORM for reliable order and payment tracking
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-900">
+                <strong>Tech Stack:</strong> Next.js 15, TypeScript, Wagmi, Viem, Prisma, PostgreSQL, TailwindCSS
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Ready to Accept Crypto Payments?
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Start accepting MNEE stablecoin payments in your store today.
+            <br />
+            Test on Sepolia testnet before going live.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <Link 
+              href="/dashboard"
+              className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+            >
+              <span>Launch Dashboard</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a 
+              href="https://sepolia.etherscan.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+            >
+              <span>View on Etherscan</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="container mx-auto px-6 py-12 border-t border-gray-200">
+        <div className="text-center text-gray-600 text-sm">
+          <p className="mb-2">
+            Cartee - Cryptocurrency payment gateway for e-commerce
+          </p>
+          <p>
+            Built with ❤️ for the Ethereum ecosystem | 
+            <a href="https://github.com/rizwanmoulvi/cartee-dashboard" className="text-blue-600 hover:text-blue-700 ml-1">
+              Open Source
+            </a>
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
