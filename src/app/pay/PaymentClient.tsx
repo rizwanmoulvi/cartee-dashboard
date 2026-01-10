@@ -439,7 +439,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                   Pay {paymentData.amount.toLocaleString()} {paymentData.currency}
                 </h1>
                 <p className="text-center mt-2" style={{ color: 'white' }}>
-                  {language === 'ko' ? '판매자' : 'to'} {paymentData.merchant}
+                  to {paymentData.merchant}
                 </p>
                 
                 {isConnected && address && (
@@ -698,9 +698,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                     style={{ color: 'white !important' }}
                   >
                     <span style={{ color: 'white !important' }}>
-                      {hasInsufficientBalance ? 
-                        (language === 'ko' ? '잔액 부족' : 'Insufficient Balance') : 
-                        (language === 'ko' ? '지금 결제' : 'Pay Now')}
+                      {hasInsufficientBalance ? 'Insufficient Balance' : 'Pay Now'}
                     </span>
                   </button>
                 </div>
