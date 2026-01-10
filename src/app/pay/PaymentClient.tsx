@@ -309,7 +309,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
           // Fallback: try direct approval
           console.log('Using fallback approve...');
           await writeApprove({
-            address: KRW_TOKEN_ADDRESS,
+            address: MNEE_TOKEN_ADDRESS,
             abi: erc20Abi,
             functionName: 'approve',
             args: [merchantAddress, tokenAmount],
@@ -326,7 +326,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
           // Fallback: try direct transfer
           console.log('Using fallback transfer...');
           await writeTransfer({
-            address: KRW_TOKEN_ADDRESS,
+            address: MNEE_TOKEN_ADDRESS,
             abi: erc20Abi,
             functionName: 'transfer',
             args: [merchantAddress, tokenAmount],
@@ -353,7 +353,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
         } else {
           // Fallback transfer
           writeTransfer({
-            address: KRW_TOKEN_ADDRESS,
+            address: MNEE_TOKEN_ADDRESS,
             abi: erc20Abi,
             functionName: 'transfer',
             args: [merchantAddress, tokenAmount],
@@ -610,8 +610,8 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                         <div className="w-5 h-5 flex items-center justify-center">
                           <Image 
-                            src="/korean-won.svg" 
-                            alt="KRW" 
+                            src="/mnee-logo.svg" 
+                            alt="MNEE" 
                             width={18} 
                             height={18} 
                             style={{ filter: 'brightness(0) saturate(100%) invert(37%) sepia(93%) saturate(1103%) hue-rotate(202deg) brightness(96%) contrast(88%)' }}
@@ -619,8 +619,8 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                         </div>
                       </div>
                       <div>
-                        <p className="font-medium text-black">Korean Won (KRW)</p>
-                        <p className="text-sm text-gray-500">Balance: {krwAvailableFormatted} KRW</p>
+                        <p className="font-medium text-black">MNEE Token</p>
+                        <p className="text-sm text-gray-500">Balance: {mneeAvailableFormatted} MNEE</p>
                       </div>
                     </div>
                   </div>
@@ -649,7 +649,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                         </p>
                         <p className="text-red-600 text-xs mt-1">
                           Required: {paymentData.amount.toFixed(2)} {paymentData.currency} | 
-                          Available: {krwAvailableFormatted} {paymentData.currency}
+                          Available: {mneeAvailableFormatted} {paymentData.currency}
                         </p>
                       </div>
                     )}
@@ -660,7 +660,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                 {chain && (
                   <div className="mb-4 p-3 bg-gray-100 rounded text-xs">
                     <p className="text-gray-600">Chain: {chain.name} (ID: {chain.id})</p>
-                    <p className="text-gray-600">Token: {KRW_TOKEN_ADDRESS.slice(0, 10)}...</p>
+                    <p className="text-gray-600">Token: {MNEE_TOKEN_ADDRESS.slice(0, 10)}...</p>
                     <p className="text-gray-600">Allowance: {currentAllowance?.toString() || '0'}</p>
                   </div>
                 )}
@@ -672,7 +672,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                     <div className="text-sm text-blue-900">
                       <p className="font-semibold mb-1">Payment Process:</p>
                       <ol className="list-decimal list-inside space-y-1">
-                        <li>Approve KRW token spending</li>
+                        <li>Approve MNEE token spending</li>
                         <li>Confirm the transfer transaction</li>
                         <li>Wait for blockchain confirmation</li>
                       </ol>
@@ -735,7 +735,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                         {isApproving ? 'Waiting for wallet confirmation...' :
                          isApproveConfirming ? 'Transaction submitted, confirming...' :
                          (txStatus === 'transferring' || txStatus === 'completed') ? 'Approved successfully' :
-                         'Allow KRW token spending'}
+                         'Allow MNEE token spending'}
                       </p>
                       {approveHash && (
                         <p className="text-xs mt-1">
@@ -767,7 +767,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
                         {isTransferring ? 'Waiting for wallet confirmation...' :
                          isTransferConfirming ? 'Transaction submitted, confirming...' :
                          txStatus === 'completed' ? 'Payment sent successfully' :
-                         'Send KRW to merchant'}
+                         'Send MNEE to merchant'}
                       </p>
                       {transferHash && (
                         <p className="text-xs mt-1">
