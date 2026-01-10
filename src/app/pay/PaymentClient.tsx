@@ -628,17 +628,9 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
 
                 {/* Fee Breakdown */}
                 <div className="mb-6">
-                  <h3 className="font-semibold text-black mb-3">Fee Information</h3>
+                  <h3 className="font-semibold text-black mb-3">Payment Summary</h3>
                   <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span className="font-medium text-black">{paymentData.amount.toFixed(2)} {paymentData.currency}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Network Fee</span>
-                      <span className="font-medium text-black">{networkFee.toFixed(2)} KAIA</span>
-                    </div>
-                    <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <div className="flex justify-between pt-2">
                       <span className="font-semibold text-black">Total</span>
                       <span className="font-semibold text-black">{paymentData.amount.toFixed(2)} {paymentData.currency}</span>
                     </div>
