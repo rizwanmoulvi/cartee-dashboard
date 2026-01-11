@@ -166,25 +166,28 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
   // Debug log
   console.log('PaymentData received:', paymentData);
   console.log('Order already paid:', isOrderPaid);
+  
+  // Wagmi hooks
+  const { address, isConnected, chain } = useAccount();
   const { switchChain } = useSwitchChain();
+  
+  // Get native balance (ETH/Sepolia ETH) for display
+  const { data: balance } = useBalance({
+    address,
+    chainId: targetChainId,
+  });
   
   // Check if user is on the correct network
   const isCorrectNetwork = chain?.id === targetChainId;
+  
+  // Use merchant wallet address or fallback to default
+  const merchantAddress = (paymentData.merchantWallet || DEFAULT_MERCHANT_ADDRESS) as `0x${string}`;
   
   // Fetch MNEE token balance
   const { data: mneeBalance } = useBalance({
     address,
     token: MNEE_TOKEN_ADDRESS,
-    chainId: targetChainI
-  // Wagmi hooks
-  const { address, isConnected, chain } = useAccount();
-  const { data: balance } = useBalance({ address });
-  
-  // Fetch MNtargetChainI balance
-  const { data: mneeBalance } = useBalance({
-    address,
-    token: MNEE_TOKEN_ADDRESS,
-    chainId: chain?.id,
+    chainId: targetChainId,
   });
 
   // Check current allowance
@@ -193,7 +196,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
     abi: erc20Abi,
     functionName: 'allowance',
     args: address ? [address, merchantAddress] : undefined,
-    chainId: chain?.id,
+    chainId: targetChainId,
   });
 
   // Calculate token amount when balance is available
@@ -205,7 +208,19 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
       setTokenAmount(calculatedAmount);
       console.log('Token amount calculated:', {
         amount: paymentData.amount,
-        decimtargetChainId,
+        decimals: tokenDecimals,
+        calculatedAmount: calculatedAmount.toString(),
+      });
+    }
+  }, [mneeBalance, paymentData.amount]);
+
+  // Simulate approve transaction
+  const { data: approveConfig } = useSimulateContract({
+    address: MNEE_TOKEN_ADDRESS,
+    abi: erc20Abi,
+    functionName: 'approve',
+    args: [merchantAddress, tokenAmount],
+    chainId: targetChainId,
     query: {
       enabled: Boolean(address && tokenAmount > BigInt(0) && (!currentAllowance || currentAllowance < tokenAmount) && isCorrectNetwork),
     },
@@ -219,20 +234,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
     args: [merchantAddress, tokenAmount],
     chainId: targetChainId,
     query: {
-      enabled: Boolean(address && tokenAmount > BigInt(0) && currentAllowance && currentAllowance >= tokenAmount && isCorrectNetwork
-      enabled: Boolean(address && tokenAmount > BigInt(0) && (!currentAllowance || currentAllowance < tokenAmount)),
-    },
-  });
-
-  // Simulate transfer transaction
-  const { data: transferConfig } = useSimulateContract({
-    address: MNEE_TOKEN_ADDRESS,
-    abi: erc20Abi,
-    functionName: 'transfer',
-    args: [merchantAddress, tokenAmount],
-    chainId: chain?.id,
-    query: {
-      enabled: Boolean(address && tokenAmount > BigInt(0) && currentAllowance && currentAllowance >= tokenAmount),
+      enabled: Boolean(address && tokenAmount > BigInt(0) && currentAllowance && currentAllowance >= tokenAmount && isCorrectNetwork),
     },
   });
 
@@ -253,9 +255,14 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
     error: transferError
   } = useWriteContract();
 
-  // Wait for ttargetChainId,
+  // Wait for approve transaction
+  const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = 
+    useWaitForTransactionReceipt({ 
+      hash: approveHash,
+      chainId: targetChainId,
     });
     
+  // Wait for transfer transaction
   const { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } = 
     useWaitForTransactionReceipt({ 
       hash: transferTxHash,
@@ -271,11 +278,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
         console.error('Failed to switch network:', error);
       }
     }
-  }t { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } = 
-    useWaitForTransactionReceipt({ 
-      hash: transferTxHash,
-      chainId: chain?.id,
-    });
+  };
 
   // Convert MNEE balance to number
   const mneeAvailable = mneeBalance ? parseFloat(formatUnits(mneeBalance.value, mneeBalance.decimals)) : 0;
@@ -341,7 +344,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
             abi: erc20Abi,
             functionName: 'approve',
             args: [merchantAddress, tokenAmount],
-            chainId: chain?.id,
+            chainId: targetChainId,
           });
         }
       } else {
@@ -358,7 +361,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
             abi: erc20Abi,
             functionName: 'transfer',
             args: [merchantAddress, tokenAmount],
-            chainId: chain?.id,
+            chainId: targetChainId,
           });
         }
       }
@@ -385,7 +388,7 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
             abi: erc20Abi,
             functionName: 'transfer',
             args: [merchantAddress, tokenAmount],
-            chainId: chain?.id,
+            chainId: targetChainId,
           });
         }
       });
