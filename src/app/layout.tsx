@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WonWay",
-  description: "Web3 Payment Gateway",
+  title: "Cartee",
+  description: "MNEE Payment Gateway",
 };
 
 export default function RootLayout({
