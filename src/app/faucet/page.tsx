@@ -6,7 +6,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagm
 
 import { Droplets, CheckCircle, AlertCircle, Loader2, Wallet } from 'lucide-react';
 
-const KRW_TOKEN_ADDRESS = '0xb813E193ddE7ba598089C398F677EDfEBb77a5Aa' as `0x${string}`;
+const MNEE_TOKEN_ADDRESS = '0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643' as `0x${string}`;
 const MINT_AMOUNT = '1000000'; // 1,000,000 tokens
 
 // Minimal ABI for mint function
@@ -48,7 +48,7 @@ export default function FaucetPage() {
     const amount = mintAmount
     
     writeContract({
-      address: KRW_TOKEN_ADDRESS,
+      address: MNEE_TOKEN_ADDRESS,
       abi: mintAbi,
       functionName: 'mint',
       args: [address, BigInt(amount)]
@@ -68,8 +68,8 @@ export default function FaucetPage() {
           <div className="flex items-center justify-center space-x-3">
             <Droplets className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">KRW Token Faucet</h1>
-              <p className="text-sm text-gray-600">Kairos Testnet</p>
+              <h1 className="text-3xl font-bold text-gray-900">MNEE Token Faucet</h1>
+              <p className="text-sm text-gray-600">Ethereum Sepolia Testnet</p>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function FaucetPage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-semibold text-gray-900 mb-2">Request Test Tokens</h2>
-                  <p className="text-gray-600">Get test KRW tokens for development and testing on Kaia Kairos testnet</p>
+                  <p className="text-gray-600">Get test MNEE tokens for development and testing on Ethereum Sepolia testnet</p>
                 </div>
 
                 {/* Token Info */}
@@ -98,12 +98,12 @@ export default function FaucetPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Token Contract:</span>
                     <a 
-                      href={`https://kairos.kaiascan.io/account/${KRW_TOKEN_ADDRESS}`}
+                      href={`https://sepolia.etherscan.io/address/${MNEE_TOKEN_ADDRESS}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-mono text-xs text-blue-600 hover:text-blue-700 underline"
                     >
-                      {KRW_TOKEN_ADDRESS.slice(0, 10)}...{KRW_TOKEN_ADDRESS.slice(-8)}
+                      {MNEE_TOKEN_ADDRESS.slice(0, 10)}...{MNEE_TOKEN_ADDRESS.slice(-8)}
                     </a>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -126,10 +126,10 @@ export default function FaucetPage() {
                       placeholder="Enter amount"
                     />
                     <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      KRW
+                      MNEE
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-600">Default: 1,000,000 KRW tokens</p>
+                  <p className="mt-2 text-sm text-gray-600">Default: 1,000,000 MNEE tokens</p>
                 </div>
 
                 {/* Status Messages */}
@@ -164,11 +164,11 @@ export default function FaucetPage() {
                       <div className="flex-1">
                         <p className="text-sm font-medium text-green-900">Success!</p>
                         <p className="text-sm text-green-700 mt-1">
-                          {mintAmount} KRW tokens have been minted to your wallet.
+                          {mintAmount} MNEE tokens have been minted to your wallet.
                         </p>
                         {hash && (
                           <a 
-                            href={`https://kairos.kaiascan.io/tx/${hash}`}
+                            href={`https://sepolia.etherscan.io/tx/${hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-green-600 hover:text-green-700 underline mt-2 inline-block"
@@ -222,16 +222,16 @@ export default function FaucetPage() {
           <div className="mt-8 bg-blue-50 rounded-xl p-6">
             <h3 className="font-semibold text-gray-900 mb-3">How it works</h3>
             <ol className="space-y-2 text-sm text-gray-700">
-              <li>1. First, get KAIA for gas fees from <a href="https://www.kaia.io/faucet" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">Kaia's official faucet (Kairos Testnet)</a></li>
-              <li>2. Connect your wallet to the Kaia Kairos testnet (chainId: 1001)</li>
+              <li>1. First, get Sepolia ETH for gas fees from <a href="https://www.alchemy.com/faucets/ethereum-sepolia" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">Alchemy Sepolia Faucet</a> or <a href="https://sepoliafaucet.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">Sepolia PoW Faucet</a></li>
+              <li>2. Connect your wallet to the Ethereum Sepolia testnet (chainId: 11155111)</li>
               <li>3. Enter the amount of test tokens you need (default: 1,000,000)</li>
               <li>4. Click "Mint Tokens" and approve the transaction</li>
               <li>5. Wait for confirmation and your tokens will be available</li>
-              <li>6. Add the token contract address {KRW_TOKEN_ADDRESS} to your wallet</li>
-              <li>7. Purchase a test item on our <a href="https://woocommerce.wonway.xyz" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 underline">WooCommerce</a> or <a href="https://kaia-commerce.myshopify.com" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 underline">Shopify</a> demo stores and utilize our payment gateway!</li>
+              <li>6. Add the token contract address {MNEE_TOKEN_ADDRESS} to your wallet</li>
+              <li>7. Test the payment gateway with your WooCommerce or Shopify store!</li>
             </ol>
             <p className="mt-4 text-xs text-gray-600">
-              Note: These are test tokens on the Kairos testnet for development purposes only and have no real value.
+              Note: These are test tokens on the Sepolia testnet for development purposes only and have no real value.
             </p>
           </div>
         </div>

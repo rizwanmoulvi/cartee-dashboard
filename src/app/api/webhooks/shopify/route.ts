@@ -103,10 +103,38 @@ export async function POST(request: NextRequest) {
 
     console.log('Order created in database:', order.id);
 
+    // Send payment link via Shopify Order Note (appears in confirmation email)
+    const paymentUrl = `https://cartee-dashboard.vercel.app/pay?orderId=${order.id}`;
+    try {
+      // Add note to order with payment instructions
+      await fetch(`https://${shopDomain}/admin/api/2024-01/orders/${data.id}.json`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Access-Token': merchant.shopifyAccessToken || ''
+        },
+        body: JSON.stringify({
+          order: {
+            id: data.id,
+            note: `MNEE Payment Link: ${paymentUrl}\n\nPlease complete payment using MNEE tokens.`,
+            note_attributes: [
+              { name: 'Payment Method', value: 'MNEE Token' },
+              { name: 'Payment URL', value: paymentUrl }
+            ]
+          }
+        })
+      });
+
+      console.log('Payment instructions added to Shopify order');
+    } catch (error) {
+      console.error('Failed to update Shopify order with payment link:', error);
+    }
+
     return NextResponse.json({ 
       message: 'Webhook received and order created',
       extracted: extractedData,
-      orderId: order.id
+      orderId: order.id,
+      paymentUrl: paymentUrl
     }, { status: 200 });
 
   } catch (error) {

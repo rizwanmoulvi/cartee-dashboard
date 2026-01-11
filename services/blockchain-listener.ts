@@ -138,10 +138,7 @@ async function processConfirmedPayment(
 ) {
   try {
     const order = await prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        merchant: true
-      }
+      where: { id: orderId }
     });
 
     if (!order) {
@@ -167,9 +164,17 @@ async function processConfirmedPayment(
 
     console.log(`[Processor] Order ${orderId} marked as PAID`);
 
+    // Fetch merchant if order has merchantWallet
+    let merchant = null;
+    if (order.merchantWallet) {
+      merchant = await prisma.merchant.findUnique({
+        where: { walletAddress: order.merchantWallet }
+      });
+    }
+
     // Notify the appropriate platform
     if (order.type === 'WOOCOMMERCE' && order.orderConfirmation) {
-      if (!order.merchant?.wooCommerceSiteURL) {
+      if (!merchant?.wooCommerceSiteURL) {
         console.error(`[Processor] WooCommerce site URL not found for merchant`);
         return;
       }
@@ -177,24 +182,24 @@ async function processConfirmedPayment(
       await notifyWooCommercePayment(
         order.orderConfirmation,
         transactionHash,
-        order.merchant.apiKey,
-        order.merchant.wooCommerceSiteURL
+        merchant.apiKey,
+        merchant.wooCommerceSiteURL
       );
     } else if (order.type === 'SHOPIFY' && order.adminGraphqlApiId) {
-      if (!order.merchant?.shopifyAccessToken || !order.merchant?.shopifyShopDomain) {
+      if (!merchant?.shopifyAccessToken || !merchant?.shopifyShopDomain) {
         console.error(`[Processor] Shopify credentials not found for merchant`);
         return;
       }
 
       await markShopifyOrderAsPaid(
         order.adminGraphqlApiId,
-        order.merchant.shopifyShopDomain,
-        order.merchant.shopifyAccessToken
+        merchant.shopifyShopDomain,
+        merchant.shopifyAccessToken
       );
     }
 
     console.log(`[Processor] Payment processing completed for order ${orderId}`);
-  } catch (error) {
+  } catch (error: any) {
     console.error(`[Processor] Error processing order ${orderId}:`, error);
   }
 }
