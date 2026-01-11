@@ -557,6 +557,18 @@ export default function MerchantDashboard() {
                       </svg>
                       <span>Cartee WooCommerce Plugin Repository</span>
                     </a>
+                    {merchant?.wooCommerceSiteURL && (
+                      <a
+                        href={merchant.wooCommerceSiteURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-sm bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors border border-indigo-200"
+                      >
+                        <Store className="w-4 h-4" />
+                        <span className="font-medium">My WooCommerce Store</span>
+                        <ExternalLink className="w-3 h-3 ml-auto" />
+                      </a>
+                    )}
                     <a
                       href="https://cartee.rizzmo.site"
                       target="_blank"

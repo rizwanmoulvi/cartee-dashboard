@@ -143,6 +143,7 @@ Add same env variables as above.
 ## Token Contract
 
 TestMNEE is deployed on Sepolia at `0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643`
+Using this instead of actual MNEE token (`0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`) on ethereum becuase we don't have funds to buy actual token and test
 
 Source: `/contracts/TestMNEE.sol`
 
