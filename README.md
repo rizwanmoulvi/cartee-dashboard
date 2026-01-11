@@ -1,8 +1,8 @@
 # Cartee
 
-A cryptocurrency payment gateway for WooCommerce and Shopify that accepts MNEE stablecoin on Ethereum.
+A cryptocurrency payment gateway for WooCommerce and Shopify that accepts MNEE stablecoin on Ethereum Sepolia testnet.
 
-Built with Next.js, Prisma, and RainbowKit. Supports both **Sepolia testnet** (for testing) and **Ethereum mainnet** (for production).
+Built with Next.js, Prisma, and RainbowKit. Currently running on testnet - **do not use with real money**.
 
 ## Live Demo
 
@@ -40,13 +40,9 @@ Copy `.env.example` to `.env` and fill in:
 # Database
 DATABASE_URL="postgresql://..."
 
-# MNEE Token Addresses
-# Testnet (Sepolia)
+# MNEE Token (Sepolia testnet)
 MNEE_TOKEN_ADDRESS="0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643"
 NEXT_PUBLIC_MNEE_TOKEN_ADDRESS="0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643"
-
-# Mainnet (Ethereum)
-NEXT_PUBLIC_MNEE_MAINNET_TOKEN_ADDRESS="0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF"
 
 # Ethereum RPC
 ETHEREUM_RPC_WSS="wss://eth-sepolia.g.alchemy.com/v2/YOUR_KEY"
@@ -89,13 +85,8 @@ Open http://localhost:3000
 
 1. Add items to cart
 2. Choose "MNEE Token Payment" at checkout
-3. **Select network** (Testnet for demos, Mainnet for real payments)
-4. Connect wallet and approve transaction
-5. Payment confirmed automatically
-
-**Network Options:**
-- **Testnet (Sepolia)**: Use free test tokens from the faucet - perfect for demos
-- **Mainnet (Ethereum)**: Use real MNEE tokens - requires ETH for gas fees
+3. Connect wallet and approve transaction
+4. Payment confirmed automatically
 
 ## WooCommerce Plugin
 
@@ -151,17 +142,10 @@ Add same env variables as above.
 
 ## Token Contract
 
-**Testnet (Sepolia):**
-- Address: `0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643`
-- Get free tokens from faucet
-- Sepolia ETH required for gas
+TestMNEE is deployed on Sepolia at `0x49F65A3C616Cd9B83DE5615D39e01B49bE14b643`
+Using this instead of actual MNEE token (`0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`) on ethereum becuase we don't have funds to buy actual token and test
 
-**Mainnet (Ethereum):**
-- Address: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`
-- Real MNEE stablecoin
-- Requires ETH for gas fees
-
-TestMNEE contract source: `/contracts/TestMNEE.sol`
+Source: `/contracts/TestMNEE.sol`
 
 Features:
 - Public minting (1M tokens per hour cooldown)
@@ -170,13 +154,11 @@ Features:
 
 ## Get Test Tokens
 
-Use the faucet at https://cartee-dashboard.vercel.app/faucet for **testnet tokens only**.
+Use the faucet at https://cartee-dashboard.vercel.app/faucet
 
-For testnet, you'll need Sepolia ETH first:
+You'll need Sepolia ETH first:
 - https://www.alchemy.com/faucets/ethereum-sepolia
 - https://sepoliafaucet.com
-
-For mainnet, purchase MNEE tokens from exchanges or DEXs.
 
 ## Project Structure
 
@@ -204,15 +186,6 @@ For mainnet, purchase MNEE tokens from exchanges or DEXs.
 - Alchemy rate limits sometimes cause approve() to fail - wait 30s and retry
 - Blockchain listener must run separately (not on Vercel)
 - Shopify doesn't show payment link automatically (need order status page customization)
-- Mainnet payments require sufficient ETH for gas - plan for ~$5-20 depending on network congestion
-
-## Network Toggle
-
-The payment page includes a network selector allowing customers to choose between:
-- **Testnet (Sepolia)**: Free test tokens, perfect for demos and testing
-- **Mainnet (Ethereum)**: Real MNEE tokens, requires real ETH for gas
-
-The system automatically validates the connected wallet is on the correct network and prompts to switch if needed.
 
 ## Contributing
 
