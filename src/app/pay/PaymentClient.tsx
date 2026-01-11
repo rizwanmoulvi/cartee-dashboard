@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronRight, Info, Wallet, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { ChevronRight, Info, Wallet, CheckCircle, Clock, AlertCircle, Network } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { 
   useAccount, 
@@ -10,9 +10,11 @@ import {
   useSimulateContract,
   useWriteContract,
   useWaitForTransactionReceipt,
-  useReadContract 
+  useReadContract,
+  useSwitchChain
 } from 'wagmi';
 import { parseUnits, formatUnits, erc20Abi } from 'viem';
+import { mainnet, sepolia } from 'wagmi/chains';
 
 interface PaymentMethod {
   id: string;
@@ -43,14 +45,25 @@ interface PaymentData {
 
 type PaymentStep = 'selection' | 'confirmation' | 'processing' | 'success';
 type TransactionStatus = 'idle' | 'approving' | 'approved' | 'transferring' | 'completed' | 'error';
+type NetworkMode = 'testnet' | 'mainnet';
 
-const MNEE_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_MNEE_TOKEN_ADDRESS as `0x${string}`;
+const MNEE_TOKEN_ADDRESS_TESTNET = process.env.NEXT_PUBLIC_MNEE_TOKEN_ADDRESS as `0x${string}`;
+const MNEE_TOKEN_ADDRESS_MAINNET = process.env.NEXT_PUBLIC_MNEE_MAINNET_TOKEN_ADDRESS as `0x${string}`;
 const DEFAULT_MERCHANT_ADDRESS = '0x742d35cc6634c0532925a3b844bc9e7595f0beb7' as `0x${string}`;
 
 interface PaymentClientProps {
   paymentData: PaymentData;
 }
 
+  const [networkMode, setNetworkMode] = useState<NetworkMode>('testnet');
+  
+  // Get the correct token address and chain based on network mode
+  const MNEE_TOKEN_ADDRESS = networkMode === 'mainnet' 
+    ? MNEE_TOKEN_ADDRESS_MAINNET 
+    : MNEE_TOKEN_ADDRESS_TESTNET;
+  
+  const targetChain = networkMode === 'mainnet' ? mainnet : sepolia;
+  const targetChainId = targetChain.id;
 export default function PaymentClient({ paymentData }: PaymentClientProps) {
   const [selectedMethod, setSelectedMethod] = useState<string>('mnee');
 
@@ -153,17 +166,21 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
   // Debug log
   console.log('PaymentData received:', paymentData);
   console.log('Order already paid:', isOrderPaid);
+  const { switchChain } = useSwitchChain();
   
-  // Use merchant wallet if available, otherwise use default
-  const merchantAddress = paymentData.merchantWallet 
-    ? paymentData.merchantWallet as `0x${string}`
-    : DEFAULT_MERCHANT_ADDRESS;
+  // Check if user is on the correct network
+  const isCorrectNetwork = chain?.id === targetChainId;
   
+  // Fetch MNEE token balance
+  const { data: mneeBalance } = useBalance({
+    address,
+    token: MNEE_TOKEN_ADDRESS,
+    chainId: targetChainI
   // Wagmi hooks
   const { address, isConnected, chain } = useAccount();
   const { data: balance } = useBalance({ address });
   
-  // Fetch MNEE token balance
+  // Fetch MNtargetChainI balance
   const { data: mneeBalance } = useBalance({
     address,
     token: MNEE_TOKEN_ADDRESS,
@@ -188,21 +205,21 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
       setTokenAmount(calculatedAmount);
       console.log('Token amount calculated:', {
         amount: paymentData.amount,
-        decimals: tokenDecimals,
-        tokenAmount: calculatedAmount.toString(),
-        currentAllowance: currentAllowance?.toString(),
-      });
-    }
-  }, [mneeBalance, paymentData.amount, currentAllowance]);
+        decimtargetChainId,
+    query: {
+      enabled: Boolean(address && tokenAmount > BigInt(0) && (!currentAllowance || currentAllowance < tokenAmount) && isCorrectNetwork),
+    },
+  });
 
-  // Simulate approve transaction
-  const { data: approveConfig } = useSimulateContract({
+  // Simulate transfer transaction
+  const { data: transferConfig } = useSimulateContract({
     address: MNEE_TOKEN_ADDRESS,
     abi: erc20Abi,
-    functionName: 'approve',
+    functionName: 'transfer',
     args: [merchantAddress, tokenAmount],
-    chainId: chain?.id,
+    chainId: targetChainId,
     query: {
+      enabled: Boolean(address && tokenAmount > BigInt(0) && currentAllowance && currentAllowance >= tokenAmount && isCorrectNetwork
       enabled: Boolean(address && tokenAmount > BigInt(0) && (!currentAllowance || currentAllowance < tokenAmount)),
     },
   });
@@ -236,14 +253,25 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
     error: transferError
   } = useWriteContract();
 
-  // Wait for transaction confirmations
-  const { isLoading: isApproveConfirming, isSuccess: isApproveConfirmed } = 
-    useWaitForTransactionReceipt({ 
-      hash: approveHash,
-      chainId: chain?.id,
+  // Wait for ttargetChainId,
     });
     
   const { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } = 
+    useWaitForTransactionReceipt({ 
+      hash: transferTxHash,
+      chainId: targetChainId,
+    });
+  
+  // Handle network switch
+  const handleNetworkSwitch = async () => {
+    if (switchChain && !isCorrectNetwork) {
+      try {
+        await switchChain({ chainId: targetChainId });
+      } catch (error) {
+        console.error('Failed to switch network:', error);
+      }
+    }
+  }t { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } = 
     useWaitForTransactionReceipt({ 
       hash: transferTxHash,
       chainId: chain?.id,
@@ -417,7 +445,22 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
             <Wallet className="w-5 h-5 text-black" />
             <span className="font-semibold text-black">Cartee</span>
           </div>
-          <ConnectButton />
+          <div className="flex items-center space-x-4">
+            {/* Network Mode Toggle */}
+            <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-lg">
+              <Network className="w-4 h-4 text-gray-600" />
+              <select
+                value={networkMode}
+                onChange={(e) => setNetworkMode(e.target.value as NetworkMode)}
+                className="bg-transparent text-sm font-medium text-gray-700 border-none focus:outline-none cursor-pointer"
+                disabled={paymentStep !== 'selection'}
+              >
+                <option value="testnet">Testnet (Sepolia)</option>
+                <option value="mainnet">Mainnet</option>
+              </select>
+            </div>
+            <ConnectButton />
+          </div>
         </div>
       </div>
 
@@ -450,6 +493,42 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
               </div>
 
               <div className="p-6">
+                {/* Network Warning */}
+                {isConnected && !isCorrectNetwork && (
+                  <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-yellow-800">Wrong Network</p>
+                        <p className="text-sm text-yellow-700 mt-1">
+                          Please switch to {networkMode === 'mainnet' ? 'Ethereum Mainnet' : 'Sepolia Testnet'} to continue.
+                        </p>
+                        <button
+                          onClick={handleNetworkSwitch}
+                          className="mt-2 text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
+                        >
+                          Switch Network
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Mainnet Warning */}
+                {networkMode === 'mainnet' && (
+                  <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <Info className="w-5 h-5 text-orange-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-orange-800">Mainnet Payment</p>
+                        <p className="text-sm text-orange-700 mt-1">
+                          You are using real MNEE tokens on Ethereum Mainnet. Make sure you have enough ETH for gas fees.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <h2 className="text-lg font-semibold text-black mb-4">Pay with</h2>
                 
                 {isConnected && balance && (
@@ -544,15 +623,19 @@ export default function PaymentClient({ paymentData }: PaymentClientProps) {
 
                 <button
                   onClick={handlePaymentClick}
-                  disabled={!isConnected}
+                  disabled={!isConnected || !isCorrectNetwork}
                   className={`w-full mt-6 font-semibold py-4 px-6 rounded-xl transition-all duration-200 text-lg ${
-                    !isConnected 
+                    !isConnected || !isCorrectNetwork
                       ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-blue-600 hover:bg-blue-700'
                   }`}
                   style={{ color: 'white !important' }}
                 >
-                  {!isConnected ? 'Connect Wallet to Pay' : 'Continue to Payment'}
+                  {!isConnected 
+                    ? 'Connect Wallet to Pay' 
+                    : !isCorrectNetwork 
+                    ? `Switch to ${networkMode === 'mainnet' ? 'Mainnet' : 'Testnet'}`
+                    : 'Continue to Payment'}
                 </button>
               </div>
             </>
